@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Inventario - Pacífica Resort Ixtapa</title>
+
+  <!-- Fuente -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Favicon del hotel -->
+  <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/96/000000/resort.png">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #dbeafe;
+      --bg: #020617;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --radius: 12px;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ========== LOGIN SCREEN ========== */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: var(--bg);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(34, 197, 94, 0.05) 0%, transparent 20%);
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hotel-branding {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .hotel-logo {
+      font-size: 42px;
+      margin-bottom: 12px;
+      display: inline-block;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      border-radius: 50%;
+      color: white;
+    }
+
+    .hotel-name {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .hotel-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    .system-name {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .credentials-hint {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--warning);
+      color: var(--warning);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 24px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .login-footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 24px;
+      }
+      
+      .hotel-name {
+        font-size: 20px;
+      }
+    }
+
+    /* Animación de carga para login */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== MAIN APP ========== */
+    .app-container {
+      display: none;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 1rem 1.5rem;
+    }
+
+    /* Encabezado simple */
+    .app-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      color: #fecaca;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .app-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      margin: 0;
+      background: linear-gradient(90deg, #f97316, #22c55e, #3b82f6, #a855f7);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: gradientMove 6s ease infinite;
+    }
+
+    .app-subtitle {
+      margin: 0.15rem 0 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    .app-tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(10px);
+      align-self: center;
+      white-space: nowrap;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Layout principal */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.7);
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 0.85rem;
+      }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.85rem;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin: 0.15rem 0 0;
+    }
+
+    .pill {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Formulario */
+    form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.7rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    @media (max-width: 700px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      margin-bottom: 0.15rem;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.4rem 0.55rem;
+      border-radius: 0.6rem;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.6);
+      background: #020617;
+    }
+
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      margin-top: 0.1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      border: none;
+      font-size: 0.83rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid #1f2937;
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.6);
+      color: #fecaca;
+    }
+
+    .btn-sm {
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    /* Toolbar y filtros */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.7rem;
+    }
+
+    .toolbar-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      flex: 1;
+    }
+
+    .toolbar-right {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .input-inline {
+      max-width: 220px;
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .select-inline {
+      max-width: 160px;
+      min-width: 120px;
+    }
+
+    @media (max-width: 600px) {
+      .toolbar-left,
+      .toolbar-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+
+    /* Tabla */
+    .table-scroll {
+      max-height: 420px;
+      overflow-y: auto;
+      border-radius: 0.8rem;
+      border: 1px solid #020617;
+      background: #020617;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      min-width: 720px;
+    }
+
+    thead {
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    th, td {
+      padding: 0.45rem 0.4rem;
+      border-bottom: 1px solid #111827;
+      text-align: left;
+    }
+
+    th {
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    tbody tr:hover {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .status-chip {
+      font-size: 0.7rem;
+      padding: 0.08rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .status-optimo {
+      background: rgba(22, 163, 74, 0.15);
+      border-color: rgba(34, 197, 94, 0.6);
+      color: #bbf7d0;
+    }
+
+    .status-regular {
+      background: rgba(234, 179, 8, 0.12);
+      border-color: rgba(250, 204, 21, 0.6);
+      color: #fef3c7;
+    }
+
+    .status-critico {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(248, 113, 113, 0.6);
+      color: #fecaca;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 1.1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .footer {
+      margin-top: 0.9rem;
+      font-size: 0.74rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    @media (max-width: 600px) {
+      .footer {
+        text-align: left;
+      }
+    }
+
+    /* Backup Panel */
+    .backup-panel {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .backup-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .backup-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .backup-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .backup-btn:hover {
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    .backup-btn.success {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .backup-btn.warning {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    /* Loader para app */
+    .loader {
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      border-top: 3px solid var(--primary);
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+
+    /* Toast Notifications */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      max-width: 300px;
+    }
+
+    .toast.success {
+      background: var(--accent);
+    }
+
+    .toast.error {
+      background: var(--danger);
+    }
+
+    .toast.warning {
+      background: var(--warning);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========== PANTALLA DE LOGIN ========== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="hotel-branding">
+        <div class="hotel-logo">🏨</div>
+        <h1 class="hotel-name">Pacifica Resort Ixtapa</h1>
+        <p class="hotel-subtitle">Departamento de Sistemas</p>
+      </div>
+      
+      <div class="system-name">Sistema de Inventario de Activos TI</div>
+      
+      <div id="errorMessage" class="error-message">
+        <!-- Mensajes de error aparecerán aquí -->
+      </div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="username">Usuario Administrador</label>
+          <input 
+            type="text" 
+            id="username" 
+            class="form-input" 
+            placeholder="Ingresa tu nombre de usuario"
+            required
+            autofocus
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="password">Contraseña</label>
+          <div class="password-container">
+            <input 
+              type="password" 
+              id="password" 
+              class="form-input" 
+              placeholder="Ingresa tu contraseña"
+              required
+            >
+            <button type="button" class="toggle-password" id="togglePassword">
+              👁️
+            </button>
+          </div>
+        </div>
+        
+        <button type="submit" class="login-btn" id="loginBtn">
+          <span id="btnText">Acceder al Sistema</span>
+          <span id="btnLoading" class="loading" style="display: none;"></span>
+        </button>
+      </form>
+      
+      <!-- Solo visible durante desarrollo -->
+      <div class="credentials-hint" id="devHint">
+        <strong>Credenciales para pruebas:</strong><br>
+        Usuario: <code>admin@pacifica</code> | Contraseña: <code>Pacifica2025</code>
+      </div>
+      
+      <div class="login-footer">
+        <p>© 2025 Pacifica Resort Ixtapa · Solo personal autorizado</p>
+        <p>Problemas para acceder? Contacta a 
+        <a 
+          href="https://wa.me/527551008478" 
+          target="_blank" 
+          style="color: var(--primary); text-decoration: none; font-weight: 500;"
+          title="Contactar por WhatsApp">Sistemas</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== APLICACIÓN PRINCIPAL ========== -->
+  <div class="app-container" id="appContainer">
+    <div class="container">
+      <!-- Encabezado con info de usuario -->
+      <header class="app-header">
+        <div>
+          <h1 class="app-title">Inventario de Equipo de Cómputo</h1>
+          <p class="app-subtitle">
+            Sistema web estático para registrar, consultar y exportar el inventario de equipo de cómputo de
+            <strong>Pacífica Resort Ixtapa</strong>.
+          </p>
+        </div>
+        <div class="user-info">
+          <div class="user-avatar">A</div>
+          <div>
+            <div style="font-size: 12px; font-weight: 500;">Administrador</div>
+            <div style="font-size: 10px; color: var(--muted);">Sesión activa</div>
+          </div>
+          <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <!-- Columna izquierda: Formulario -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Registrar / editar equipo</h2>
+              <p class="card-subtitle">Captura la información técnica y de ubicación del equipo.</p>
+            </div>
+          </div>
+
+          <form id="inventory-form">
+            <input type="hidden" id="item-id" />
+
+            <div class="form-row">
+              <div>
+                <label for="categoria">Categoría</label>
+                <select id="categoria" required>
+                  <option value="">Selecciona una opción</option>
+                  <option value="PC Escritorio">PC Escritorio</option>
+                  <option value="Laptop">Laptop</option>
+                  <option value="Impresora / Multifuncional">Impresora / Multifuncional</option>
+                  <option value="Equipo de Red">Equipo de Red</option>
+                  <option value="Teléfono IP">Teléfono IP</option>
+                  <option value="Servidor">Servidor</option>
+                  <option value="Punto de Venta / POS">Punto de Venta / POS</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
+              <div>
+                <label for="area">Área / departamento</label>
+                <input id="area" type="text" placeholder="Recepción, Reservaciones, Administración..." required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="marca">Marca</label>
+                <input id="marca" type="text" placeholder="Dell, HP, Lenovo, Epson..." required />
+              </div>
+              <div>
+                <label for="modelo">Modelo</label>
+                <input id="modelo" type="text" placeholder="Ej: OptiPlex 7090" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="serie">Número de serie</label>
+                <input id="serie" type="text" placeholder="S/N del fabricante" />
+              </div>
+              <div>
+                <label for="activo">No. de activo / etiqueta hotel</label>
+                <input id="activo" type="text" placeholder="Código interno del hotel" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="ip">Dirección IP (si aplica)</label>
+                <input id="ip" type="text" placeholder="192.168.x.x" />
+              </div>
+              <div>
+                <label for="fecha">Fecha de alta / adquisición</label>
+                <input id="fecha" type="date" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="estado">Estado del equipo</label>
+                <select id="estado" required>
+                  <option value="">Selecciona una opción</option>
+                  <option value="Óptimo">Óptimo</option>
+                  <option value="Regular">Regular</option>
+                  <option value="Crítico">Crítico</option>
+                </select>
+              </div>
+              <div>
+                <label for="usuario">Usuario / responsable</label>
+                <input id="usuario" type="text" placeholder="Nombre del usuario o área responsable" />
+              </div>
+            </div>
+
+            <div>
+              <label for="notas">Notas técnicas / observaciones</label>
+              <textarea id="notas" placeholder="Detalles de hardware, software, licencias, incidencias recientes, etc."></textarea>
+            </div>
+
+            <div class="btn-row">
+              <button type="button" class="btn btn-secondary" id="btn-cancelar" disabled>Cancelar edición</button>
+              <button type="submit" class="btn btn-primary" id="btn-guardar">
+                Guardar equipo
+              </button>
+            </div>
+          </form>
+
+          <!-- Panel de Backup -->
+          <div class="backup-panel">
+            <div class="backup-title">🔒 Copias de Seguridad</div>
+            <div class="backup-buttons">
+              <button class="backup-btn success" id="btnBackupNow">Crear Backup Ahora</button>
+              <button class="backup-btn warning" id="btnRestoreBackup">Restaurar Backup</button>
+              <button class="backup-btn" id="btnExportBackup">Exportar a Excel</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Columna derecha: Tabla -->
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Inventario registrado</h2>
+              <p class="card-subtitle">
+                Consulta, filtra y exporta el inventario guardado en este navegador.
+              </p>
+            </div>
+            <div class="pill">
+              Total de equipos: <span id="total-equipos">0</span>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <input
+                id="busqueda"
+                type="text"
+                class="input-inline"
+                placeholder="Buscar por marca, modelo, área, usuario..."
+              />
+              <select id="filtro-categoria" class="select-inline">
+                <option value="">Todas las categorías</option>
+                <option value="PC Escritorio">PC Escritorio</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Impresora / Multifuncional">Impresora / Multifuncional</option>
+                <option value="Equipo de Red">Equipo de Red</option>
+                <option value="Teléfono IP">Teléfono IP</option>
+                <option value="Servidor">Servidor</option>
+                <option value="Punto de Venta / POS">Punto de Venta / POS</option>
+                <option value="Otro">Otro</option>
+              </select>
+              <select id="filtro-estado" class="select-inline">
+                <option value="">Todos los estados</option>
+                <option value="Óptimo">Óptimo</option>
+                <option value="Regular">Regular</option>
+                <option value="Crítico">Crítico</option>
+              </select>
+            </div>
+            <div class="toolbar-right">
+              <button id="btn-exportar" class="btn btn-secondary btn-sm">
+                Exportar CSV
+              </button>
+              <button id="btn-semilla" class="btn btn-secondary btn-sm">
+                Cargar ejemplo
+              </button>
+            </div>
+          </div>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Categoría</th>
+                  <th>Área</th>
+                  <th>Marca / modelo</th>
+                  <th>Activo</th>
+                  <th>IP</th>
+                  <th>Estado</th>
+                  <th>Usuario</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-cuerpo">
+                <!-- Filas dinámicas -->
+              </tbody>
+            </table>
+            <div id="empty-state" class="empty-state" style="display: none;">
+              No hay equipos registrados todavía. Usa el formulario de la izquierda para agregar el primero.
+            </div>
+          </div>
+
+          <div class="footer">
+            Inventario de Sistemas · Pacífica Resort Ixtapa
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // CONFIGURACIÓN Y CONSTANTES
+    // ============================================
+    const CONFIG = {
+      // Credenciales de administrador
+      ADMIN_USER: 'admin@pacifica',
+      ADMIN_PASS: 'Pacifica2025',
+      
+      // Claves de almacenamiento
+      STORAGE_KEYS: {
+        INVENTORY: 'pacifica_inventory_data_v2',
+        BACKUPS: 'pacifica_inventory_backups',
+        SESSION: 'pacifica_inventory_session'
+      },
+      
+      // Configuración de sesión
+      SESSION_TIMEOUT: 60, // minutos
+      
+      // Configuración de backup
+      AUTO_BACKUP_INTERVAL: 24 * 60 * 60 * 1000, // 24 horas en milisegundos
+      MAX_BACKUPS: 10
+    };
+
+    // ============================================
+    // VARIABLES GLOBALES
+    // ============================================
+    let inventario = [];
+    let autoBackupInterval;
+
+    // ============================================
+    // ELEMENTOS DEL DOM - LOGIN
+    // ============================================
+    const loginScreen = document.getElementById('loginScreen');
+    const appContainer = document.getElementById('appContainer');
+    const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const loginBtn = document.getElementById('loginBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoading = document.getElementById('btnLoading');
+    const errorMessage = document.getElementById('errorMessage');
+    const devHint = document.getElementById('devHint');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // ============================================
+    // ELEMENTOS DEL DOM - INVENTARIO
+    // ============================================
+    // Formulario principal
+    const form = document.getElementById("inventory-form");
+    const inputId = document.getElementById("item-id");
+    const inputCategoria = document.getElementById("categoria");
+    const inputArea = document.getElementById("area");
+    const inputMarca = document.getElementById("marca");
+    const inputModelo = document.getElementById("modelo");
+    const inputSerie = document.getElementById("serie");
+    const inputActivo = document.getElementById("activo");
+    const inputIp = document.getElementById("ip");
+    const inputFecha = document.getElementById("fecha");
+    const inputEstado = document.getElementById("estado");
+    const inputUsuario = document.getElementById("usuario");
+    const inputNotas = document.getElementById("notas");
+
+    // Tabla y controles
+    const tablaCuerpo = document.getElementById("tabla-cuerpo");
+    const emptyState = document.getElementById("empty-state");
+    const totalEquiposLabel = document.getElementById("total-equipos");
+    const busqueda = document.getElementById("busqueda");
+    const filtroCategoria = document.getElementById("filtro-categoria");
+    const filtroEstado = document.getElementById("filtro-estado");
+    const btnExportar = document.getElementById("btn-exportar");
+    const btnSemilla = document.getElementById("btn-semilla");
+    const btnCancelar = document.getElementById("btn-cancelar");
+    const btnGuardar = document.getElementById("btn-guardar");
+
+    // Botones de backup
+    const btnBackupNow = document.getElementById('btnBackupNow');
+    const btnRestoreBackup = document.getElementById('btnRestoreBackup');
+    const btnExportBackup = document.getElementById('btnExportBackup');
+
+    // ============================================
+    // FUNCIONES DE AUTENTICACIÓN
+    // ============================================
+    function initAuth() {
+      // Configurar evento de login
+      loginForm.addEventListener('submit', handleLogin);
+      
+      // Configurar toggle de contraseña
+      togglePasswordBtn.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+      });
+      
+      // Configurar logout
+      logoutBtn.addEventListener('click', handleLogout);
+      
+      // Ocultar hint de desarrollo en producción
+      if (window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1')) {
+        devHint.style.display = 'none';
+      }
+      
+      // Verificar sesión existente
+      checkExistingSession();
+    }
+
+    function validateCredentials(username, password) {
+      return username === CONFIG.ADMIN_USER && password === CONFIG.ADMIN_PASS;
+    }
+
+    function createSession() {
+      const sessionData = {
+        user: CONFIG.ADMIN_USER,
+        timestamp: new Date().getTime(),
+        expires: new Date().getTime() + (CONFIG.SESSION_TIMEOUT * 60000),
+        token: btoa(`${CONFIG.ADMIN_USER}:${Date.now()}`).replace(/=/g, '')
+      };
+      
+      // Guardar en localStorage con encriptación básica
+      const encryptedSession = btoa(JSON.stringify(sessionData));
+      localStorage.setItem(CONFIG.STORAGE_KEYS.SESSION, encryptedSession);
+      
+      return sessionData.token;
+    }
+
+    function checkExistingSession() {
+      try {
+        const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.SESSION);
+        if (!stored) return false;
+        
+        const sessionData = JSON.parse(atob(stored));
+        const now = new Date().getTime();
+        
+        if (now > sessionData.expires) {
+          localStorage.removeItem(CONFIG.STORAGE_KEYS.SESSION);
+          return false;
+        }
+        
+        // Sesión válida, mostrar la app
+        showApp();
+        return true;
+      } catch (e) {
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.SESSION);
+        return false;
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      
+      // Mostrar estado de carga
+      btnText.style.display = 'none';
+      btnLoading.style.display = 'inline-block';
+      loginBtn.disabled = true;
+      
+      // Simular tiempo de procesamiento
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      if (validateCredentials(username, password)) {
+        // Crear sesión
+        createSession();
+        
+        // Mostrar éxito
+        loginBtn.style.background = 'linear-gradient(135deg, var(--accent), #16a34a)';
+        btnText.textContent = '✓ Acceso concedido';
+        btnText.style.display = 'inline-block';
+        btnLoading.style.display = 'none';
+        
+        // Mostrar la app después de breve pausa
+        setTimeout(() => {
+          showApp();
+        }, 500);
+        
+      } else {
+        // Mostrar error
+        errorMessage.textContent = 'Credenciales incorrectas. Verifica tu usuario y contraseña.';
+        errorMessage.style.display = 'block';
+        
+        // Restaurar botón
+        btnText.style.display = 'inline-block';
+        btnLoading.style.display = 'none';
+        loginBtn.disabled = false;
+        
+        // Efecto de error
+        usernameInput.style.borderColor = 'var(--danger)';
+        passwordInput.style.borderColor = 'var(--danger)';
+        
+        setTimeout(() => {
+          usernameInput.style.borderColor = '';
+          passwordInput.style.borderColor = '';
+        }, 2000);
+      }
+    }
+
+    function handleLogout() {
+      // Detener backup automático
+      if (autoBackupInterval) {
+        clearInterval(autoBackupInterval);
+      }
+      
+      // Limpiar sesión
+      localStorage.removeItem(CONFIG.STORAGE_KEYS.SESSION);
+      
+      // Mostrar mensaje
+      showToast('Sesión cerrada correctamente', 'warning');
+      
+      // Volver al login
+      setTimeout(() => {
+        loginScreen.style.display = 'flex';
+        appContainer.style.display = 'none';
+        
+        // Limpiar formulario de login
+        usernameInput.value = '';
+        passwordInput.value = '';
+        passwordInput.setAttribute('type', 'password');
+        togglePasswordBtn.textContent = '👁️';
+        errorMessage.style.display = 'none';
+        
+        // Restaurar botón de login
+        loginBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--primary-dark))';
+        btnText.textContent = 'Acceder al Sistema';
+        loginBtn.disabled = false;
+      }, 500);
+    }
+
+    function showApp() {
+      loginScreen.style.display = 'none';
+      appContainer.style.display = 'block';
+      
+      // Iniciar el sistema de inventario
+      initInventorySystem();
+      
+      // Iniciar backup automático
+      startAutoBackup();
+    }
+
+    // ============================================
+    // SISTEMA DE INVENTARIO
+    // ============================================
+    function initInventorySystem() {
+      // Cargar inventario desde localStorage
+      cargarInventario();
+      
+      // Configurar eventos del formulario
+      form.addEventListener("submit", handleFormSubmit);
+      btnCancelar.addEventListener("click", () => modoEdicion(false));
+      
+      // Configurar eventos de la tabla
+      tablaCuerpo.addEventListener("click", handleTableClick);
+      
+      // Configurar filtros
+      [busqueda, filtroCategoria, filtroEstado].forEach((el) => {
+        el.addEventListener("input", renderTabla);
+        el.addEventListener("change", renderTabla);
+      });
+      
+      // Configurar botones de exportación
+      btnExportar.addEventListener("click", exportToCSV);
+      btnSemilla.addEventListener("click", loadSampleData);
+      
+      // Configurar botones de backup
+      btnBackupNow.addEventListener('click', createManualBackup);
+      btnRestoreBackup.addEventListener('click', restoreFromBackup);
+      btnExportBackup.addEventListener('click', exportToExcel);
+    }
+
+    function cargarInventario() {
+      try {
+        const data = localStorage.getItem(CONFIG.STORAGE_KEYS.INVENTORY);
+        inventario = data ? JSON.parse(data) : [];
+        
+        // Si no hay datos, intentar cargar del último backup
+        if (inventario.length === 0) {
+          const backups = getBackups();
+          if (backups.length > 0) {
+            const latestBackup = backups[0];
+            if (confirm('No se encontraron datos actuales. ¿Deseas restaurar del último backup?')) {
+              inventario = latestBackup.data;
+              guardarInventario();
+              showToast('Datos restaurados del backup', 'success');
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Error al leer localStorage:", e);
+        inventario = [];
+      }
+      renderTabla();
+    }
+
+    function guardarInventario() {
+      try {
+        localStorage.setItem(CONFIG.STORAGE_KEYS.INVENTORY, JSON.stringify(inventario));
+      } catch (e) {
+        console.error("Error al guardar en localStorage:", e);
+        showToast('Error al guardar datos', 'error');
+      }
+    }
+
+    function limpiarFormulario() {
+      inputId.value = "";
+      inputCategoria.value = "";
+      inputArea.value = "";
+      inputMarca.value = "";
+      inputModelo.value = "";
+      inputSerie.value = "";
+      inputActivo.value = "";
+      inputIp.value = "";
+      inputFecha.value = "";
+      inputEstado.value = "";
+      inputUsuario.value = "";
+      inputNotas.value = "";
+    }
+
+    function modoEdicion(activado) {
+      if (activado) {
+        btnCancelar.disabled = false;
+        btnGuardar.textContent = "Actualizar equipo";
+      } else {
+        btnCancelar.disabled = true;
+        btnGuardar.textContent = "Guardar equipo";
+        limpiarFormulario();
+      }
+    }
+
+    function estadoClass(estado) {
+      if (estado === "Óptimo") return "status-chip status-optimo";
+      if (estado === "Regular") return "status-chip status-regular";
+      if (estado === "Crítico") return "status-chip status-critico";
+      return "status-chip";
+    }
+
+    function renderTabla() {
+      const texto = busqueda.value.toLowerCase().trim();
+      const cat = filtroCategoria.value;
+      const est = filtroEstado.value;
+
+      let filtrados = inventario.filter((item) => {
+        const matchTexto =
+          !texto ||
+          (item.categoria || "").toLowerCase().includes(texto) ||
+          (item.area || "").toLowerCase().includes(texto) ||
+          (item.marca || "").toLowerCase().includes(texto) ||
+          (item.modelo || "").toLowerCase().includes(texto) ||
+          (item.usuario || "").toLowerCase().includes(texto);
+
+        const matchCategoria = !cat || item.categoria === cat;
+        const matchEstado = !est || item.estado === est;
+
+        return matchTexto && matchCategoria && matchEstado;
+      });
+
+      tablaCuerpo.innerHTML = "";
+
+      if (filtrados.length === 0) {
+        emptyState.style.display = "block";
+      } else {
+        emptyState.style.display = "none";
+
+        filtrados.forEach((item) => {
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${item.categoria || ""}</td>
+            <td>${item.area || ""}</td>
+            <td>
+              <div><strong>${item.marca || ""}</strong></div>
+              <div style="font-size: 0.75rem; color: #9ca3af;">${item.modelo || ""}</div>
+            </td>
+            <td>${item.activo || ""}</td>
+            <td style="font-size: 0.75rem;">${item.ip || ""}</td>
+            <td>
+              <span class="${estadoClass(item.estado)}">${item.estado || ""}</span>
+            </td>
+            <td style="font-size: 0.75rem;">${item.usuario || ""}</td>
+            <td>
+              <div style="display:flex; gap:0.25rem; flex-wrap:wrap;">
+                <button class="btn btn-secondary btn-sm" data-accion="editar" data-id="${item.id}">Editar</button>
+                <button class="btn btn-danger btn-sm" data-accion="eliminar" data-id="${item.id}">Eliminar</button>
+              </div>
+            </td>
+          `;
+          tablaCuerpo.appendChild(tr);
+        });
+      }
+
+      totalEquiposLabel.textContent = inventario.length;
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      const payload = {
+        id: inputId.value ? Number(inputId.value) : Date.now(),
+        categoria: inputCategoria.value,
+        area: inputArea.value.trim(),
+        marca: inputMarca.value.trim(),
+        modelo: inputModelo.value.trim(),
+        serie: inputSerie.value.trim(),
+        activo: inputActivo.value.trim(),
+        ip: inputIp.value.trim(),
+        fecha: inputFecha.value,
+        estado: inputEstado.value,
+        usuario: inputUsuario.value.trim(),
+        notas: inputNotas.value.trim(),
+      };
+
+      if (!payload.categoria || !payload.area || !payload.marca || !payload.modelo || !payload.estado) {
+        showToast('Por favor completa los campos requeridos', 'warning');
+        return;
+      }
+
+      if (inputId.value) {
+        const index = inventario.findIndex((i) => i.id === payload.id);
+        if (index !== -1) {
+          inventario[index] = payload;
+          showToast('Equipo actualizado correctamente', 'success');
+        }
+      } else {
+        inventario.push(payload);
+        showToast('Equipo agregado al inventario', 'success');
+      }
+
+      guardarInventario();
+      renderTabla();
+      modoEdicion(false);
+    }
+
+    function handleTableClick(e) {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+
+      const accion = btn.getAttribute("data-accion");
+      const id = Number(btn.getAttribute("data-id"));
+      const item = inventario.find((i) => i.id === id);
+      if (!item) return;
+
+      if (accion === "editar") {
+        inputId.value = item.id;
+        inputCategoria.value = item.categoria || "";
+        inputArea.value = item.area || "";
+        inputMarca.value = item.marca || "";
+        inputModelo.value = item.modelo || "";
+        inputSerie.value = item.serie || "";
+        inputActivo.value = item.activo || "";
+        inputIp.value = item.ip || "";
+        inputFecha.value = item.fecha || "";
+        inputEstado.value = item.estado || "";
+        inputUsuario.value = item.usuario || "";
+        inputNotas.value = item.notas || "";
+        modoEdicion(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      if (accion === "eliminar") {
+        if (confirm("¿Seguro que deseas eliminar este equipo del inventario?")) {
+          inventario = inventario.filter((i) => i.id !== id);
+          guardarInventario();
+          renderTabla();
+          showToast('Equipo eliminado correctamente', 'success');
+        }
+      }
+    }
+
+    function exportToCSV() {
+      if (inventario.length === 0) {
+        showToast('No hay equipos para exportar', 'warning');
+        return;
+      }
+
+      const encabezados = [
+        "ID", "Categoría", "Área", "Marca", "Modelo", "Número de serie",
+        "No. activo", "IP", "Fecha alta", "Estado", "Usuario", "Notas"
+      ];
+
+      const filas = inventario.map((item) => [
+        item.id, item.categoria || "", item.area || "", item.marca || "",
+        item.modelo || "", item.serie || "", item.activo || "", item.ip || "",
+        item.fecha || "", item.estado || "", item.usuario || "",
+        (item.notas || "").replace(/\n/g, " ")
+      ]);
+
+      const data = [encabezados, ...filas]
+        .map((fila) => fila.map(campo => `"${String(campo).replace(/"/g, '""')}"`).join(","))
+        .join("\n");
+
+      downloadFile(data, 'inventario_pacifica_resort_ixtapa.csv', 'text/csv');
+      showToast('CSV exportado correctamente', 'success');
+    }
+
+    function loadSampleData() {
+      if (inventario.length > 0 && !confirm("Esto agregará ejemplos al inventario actual. ¿Deseas continuar?")) {
+        return;
+      }
+
+      const base = Date.now();
+      const ejemplos = [
+        {
+          id: base,
+          categoria: "PC Escritorio",
+          area: "Recepción",
+          marca: "Dell",
+          modelo: "OptiPlex 7090",
+          serie: "SN-DEL-REC-001",
+          activo: "PAC-IT-001",
+          ip: "192.168.10.21",
+          fecha: "2023-07-15",
+          estado: "Óptimo",
+          usuario: "Recepción Front Desk",
+          notas: "Equipo principal para PMS del hotel, Windows 11 Pro, Office 365 licenciado."
+        },
+        {
+          id: base + 1,
+          categoria: "Laptop",
+          area: "Gerencia General",
+          marca: "HP",
+          modelo: "EliteBook 840 G7",
+          serie: "SN-HP-GER-002",
+          activo: "PAC-IT-015",
+          ip: "192.168.10.35",
+          fecha: "2022-03-10",
+          estado: "Óptimo",
+          usuario: "Gerencia General",
+          notas: "Uso administrativo, acceso VPN a sistema corporativo, respaldos semanales."
+        },
+        {
+          id: base + 2,
+          categoria: "Impresora / Multifuncional",
+          area: "Administración",
+          marca: "Epson",
+          modelo: "WorkForce Pro WF-4740",
+          serie: "SN-EPS-ADM-003",
+          activo: "PAC-IT-030",
+          ip: "192.168.10.55",
+          fecha: "2021-11-02",
+          estado: "Regular",
+          usuario: "Administración",
+          notas: "Reporta atascos de papel esporádicos; requiere mantenimiento preventivo."
+        }
+      ];
+
+      inventario = inventario.concat(ejemplos);
+      guardarInventario();
+      renderTabla();
+      showToast('Datos de ejemplo cargados', 'success');
+    }
+
+    // ============================================
+    // SISTEMA DE BACKUP
+    // ============================================
+    function getBackups() {
+      try {
+        const backups = localStorage.getItem(CONFIG.STORAGE_KEYS.BACKUPS);
+        return backups ? JSON.parse(backups) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveBackups(backups) {
+      localStorage.setItem(CONFIG.STORAGE_KEYS.BACKUPS, JSON.stringify(backups));
+    }
+
+    function createBackup() {
+      const backup = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        hotel: 'Pacifica Resort Ixtapa',
+        itemCount: inventario.length,
+        data: [...inventario] // Copia profunda
+      };
+
+      let backups = getBackups();
+      
+      // Agregar nuevo backup al inicio
+      backups.unshift(backup);
+      
+      // Limitar número de backups
+      if (backups.length > CONFIG.MAX_BACKUPS) {
+        backups = backups.slice(0, CONFIG.MAX_BACKUPS);
+      }
+      
+      saveBackups(backups);
+      return backup;
+    }
+
+    function createManualBackup() {
+      const backup = createBackup();
+      downloadFile(
+        JSON.stringify(backup, null, 2),
+        `backup_inventario_${new Date().toISOString().split('T')[0]}.json`,
+        'application/json'
+      );
+      showToast(`Backup creado (${backup.itemCount} equipos)`, 'success');
+    }
+
+    function restoreFromBackup() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const backup = JSON.parse(event.target.result);
+            
+            if (!backup.data || !Array.isArray(backup.data)) {
+              throw new Error('Formato de backup inválido');
+            }
+            
+            if (confirm(`¿Restaurar backup del ${new Date(backup.timestamp).toLocaleDateString()} con ${backup.data.length} equipos?`)) {
+              inventario = backup.data;
+              guardarInventario();
+              renderTabla();
+              showToast(`Backup restaurado (${backup.data.length} equipos)`, 'success');
+            }
+          } catch (error) {
+            showToast('Error al leer el archivo de backup', 'error');
+          }
+        };
+        reader.readAsText(file);
+      };
+      
+      input.click();
+    }
+
+    function startAutoBackup() {
+      // Crear backup inicial
+      if (inventario.length > 0) {
+        createBackup();
+      }
+      
+      // Configurar backup automático periódico
+      autoBackupInterval = setInterval(() => {
+        if (inventario.length > 0) {
+          const backup = createBackup();
+          console.log(`Backup automático creado: ${backup.itemCount} equipos`);
+        }
+      }, CONFIG.AUTO_BACKUP_INTERVAL);
+    }
+
+    function exportToExcel() {
+      if (inventario.length === 0) {
+        showToast('No hay equipos para exportar', 'warning');
+        return;
+      }
+
+      // Crear contenido HTML para Excel
+      let html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Inventario Pacífica Resort Ixtapa</title>
+          <style>
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #2563eb; color: white; }
+            tr:nth-child(even) { background-color: #f2f2f2; }
+          </style>
+        </head>
+        <body>
+          <h1>Inventario de Equipo de Cómputo</h1>
+          <h2>Pacífica Resort Ixtapa</h2>
+          <p>Generado: ${new Date().toLocaleDateString()}</p>
+          <table>
+            <tr>
+              <th>Categoría</th><th>Área</th><th>Marca</th><th>Modelo</th>
+              <th>No. Serie</th><th>No. Activo</th><th>IP</th><th>Fecha Alta</th>
+              <th>Estado</th><th>Usuario</th><th>Notas</th>
+            </tr>
+      `;
+
+      inventario.forEach(item => {
+        html += `
+          <tr>
+            <td>${item.categoria || ''}</td>
+            <td>${item.area || ''}</td>
+            <td>${item.marca || ''}</td>
+            <td>${item.modelo || ''}</td>
+            <td>${item.serie || ''}</td>
+            <td>${item.activo || ''}</td>
+            <td>${item.ip || ''}</td>
+            <td>${item.fecha || ''}</td>
+            <td>${item.estado || ''}</td>
+            <td>${item.usuario || ''}</td>
+            <td>${(item.notas || '').replace(/\n/g, ' ')}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+          </table>
+          <p style="margin-top: 20px; color: #666;">
+            Total de equipos: ${inventario.length}<br>
+            Departamento de Sistemas - Pacifica Resort Ixtapa
+          </p>
+        </body>
+        </html>
+      `;
+
+      downloadFile(html, `inventario_pacifica_${new Date().toISOString().split('T')[0]}.html`, 'text/html');
+      showToast('Reporte HTML exportado', 'success');
+    }
+
+    // ============================================
+    // FUNCIONES UTILITARIAS
+    // ============================================
+    function downloadFile(data, filename, type) {
+      const blob = new Blob([data], { type: type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function showToast(message, type = 'info') {
+      // Eliminar toast anterior si existe
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+      
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      // Auto-eliminar después de 3 segundos
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.remove();
+        }
+      }, 3000);
+    }
+
+    // ============================================
+    // INICIALIZACIÓN
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      initAuth();
+      
+      // Tecla Enter para enviar
+      document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && document.activeElement === passwordInput) {
+          loginForm.dispatchEvent(new Event('submit'));
+        }
+      });
+    });
+
+    // Prevenir que los usuarios salgan sin guardar
+    window.addEventListener('beforeunload', (e) => {
+      if (inventario.length > 0) {
+        // Crear un último backup antes de salir
+        createBackup();
+      }
+    });
+  </script>
+</body>
+</html>
